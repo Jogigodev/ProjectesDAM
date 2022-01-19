@@ -47,6 +47,7 @@ namespace _3enRalla
                         {
                             msg=partida.Jugar(partida.Jugador1, Convert.ToInt32(clauFila[1]), Convert.ToInt32(clauColumna[1]));
                             Console.WriteLine(msg);
+                            if (partida.Jugador1.Tirades >= 3 || partida.Jugador2.Tirades >= 3) partida.PartidaFinalitzada();
                         }
                         else
                         {
@@ -59,6 +60,7 @@ namespace _3enRalla
                         {
                             msg=partida.Jugar(partida.Jugador2, Convert.ToInt32(clauFila[1]), Convert.ToInt32(clauColumna[1]));
                             Console.WriteLine(msg);
+                            if (partida.Jugador1.Tirades >= 3 || partida.Jugador2.Tirades >= 3) partida.PartidaFinalitzada();
 
                         }
                         else

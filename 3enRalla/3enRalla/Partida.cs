@@ -10,26 +10,28 @@ namespace _3enRalla
     {
         private int nJugadors;
         private char[,] tauler;
-        private string jugadorGuanyador;
+        private char jugadorGuanyador;
         private Jugador jugador1;
         private Jugador jugador2;
-        private bool Acabada;
+        private bool acabada;
         private char torn;
 
         public Partida()
         {
             Tauler = new char[3,3] { { '-', '-', '-' }, { '-', '-', '-' }, { '-', '-', '-' } };
             NJugadors = 0;
-            JugadorGuanyador = "-";
+            JugadorGuanyador = '-';
             Acabada = false;
             Torn = 'X';
         }
         public char[,] Tauler { get => tauler; set => tauler = value; }
         public int NJugadors { get => nJugadors; set => nJugadors = value; }
-        public string JugadorGuanyador { get => jugadorGuanyador; set => jugadorGuanyador = value; }
+        public char JugadorGuanyador { get => jugadorGuanyador; set => jugadorGuanyador = value; }
         public Jugador Jugador1 { get => jugador1; set => jugador1 = value; }
         public Jugador Jugador2 { get => jugador2; set => jugador2 = value; }
         public char Torn { get => torn; set => torn = value; }
+        public bool Acabada { get => acabada; set => acabada = value; }
+
         public string InfoPartida()
         {
             return String.Format("tauler: {0}; winner: {1}; turn: {2}",Tauler,JugadorGuanyador,Torn);
@@ -72,6 +74,27 @@ namespace _3enRalla
             }
             return msg;
         }
+        public void PartidaFinalitzada()
+        {
+            if (EsVictoria(this.Jugador1.Nom)) JugadorGuanyador=Jugador1.Nom;
+            else if (EsVictoria(this.Jugador2.Nom)) JugadorGuanyador = Jugador2.Nom;
+            else if(Jugador1.Tirades+Jugador2.Tirades==9) JugadorGuanyador = 'E';
+        }
+
+        private bool EsVictoria(char jugador)
+        {
+            bool victoria = false;
+            if ((Tauler[0, 0] == jugador && Tauler[0, 1] == jugador && Tauler[0, 2] == jugador) || (Tauler[1, 0] == jugador && Tauler[1, 1] == jugador && Tauler[1, 2] == jugador)
+                || (Tauler[2, 0] == jugador && Tauler[2, 1] == jugador && Tauler[2, 2] == jugador) || (Tauler[0, 0] == jugador && Tauler[1, 1] == jugador && Tauler[2, 2] == jugador)
+                || (Tauler[0, 2] == jugador && Tauler[1, 1] == jugador && Tauler[2, 0] == jugador) || (Tauler[0, 0] == jugador && Tauler[1, 0] == jugador && Tauler[2, 0] == jugador)
+                || (Tauler[0, 1] == jugador && Tauler[1, 1] == jugador && Tauler[2, 1] == jugador) || (Tauler[0, 2] == jugador && Tauler[1, 2] == jugador && Tauler[2, 2] == jugador)) ;
+            {
+                victoria = true;
+            }
+            return victoria;
+
+        }
+
         public class Jugador
         {
             private char nom;
@@ -85,5 +108,7 @@ namespace _3enRalla
             public char Nom { get => nom; set => nom = value; }
             public int Tirades { get => tirades; set => tirades = value; }
         }
+        
     }
+
 }
