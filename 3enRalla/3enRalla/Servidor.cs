@@ -13,10 +13,8 @@ namespace _3enRalla
         public HttpListener listener = null;
         public Partida partida ;
         public string msg="";
-        string mostrarFormulari()
-        {
-            return System.IO.File.ReadAllText(@"..\..\..\Formulari.html");
-        }
+        public string taulerHTML = System.IO.File.ReadAllText(@"..\..\..\Tauler.html");
+        
         //Crida asíncrona, no bloqueja la resta de programa.
         public async void ListenAsync()
         {
@@ -35,7 +33,7 @@ namespace _3enRalla
                 
                 var camps = context.Request.RawUrl.Split("?");
                 if (camps.Length > 1)
-                {
+                {  
                     var clauvalor = camps[1].Split("&");
                     var clauJugador = clauvalor[0].Split("=");
                     var clauFila = clauvalor[1].Split("=");
@@ -77,6 +75,7 @@ namespace _3enRalla
                         if (partida is null)
                         {
                             partida = new Partida();
+                            
                             partida.AfegirJugador();
                             msg = partida.Jugador1.Nom.ToString();
                             Console.WriteLine(partida.Jugador1.Nom.ToString());
@@ -110,8 +109,20 @@ namespace _3enRalla
                     }
                     else if (camps[0] == "/obtenirTauler")
                     {
-                        msg=partida.InfoPartida();
-                        Console.WriteLine(msg);
+                        if(partida!=null)
+                        {
+                            string result = string.Format(taulerHTML, partida.Tauler[0,0], partida.Tauler[0, 1], partida.Tauler[0, 2], partida.Tauler[1, 0], partida.Tauler[1, 1], partida.Tauler[1, 2], partida.Tauler[2, 0], partida.Tauler[2, 1], partida.Tauler[2, 2]);
+                            
+                            msg=String.Format("{0} winner:{1}; turn: {2}", result, partida.JugadorGuanyador, partida.Torn);
+                            
+                            Console.WriteLine( String.Format("Tauler: "+"\n"+ "{0}{1}{2}" + "\n"+"{3}{4}{5}"+"\n"+"{6}{7}{8}; winner: {9}; turn: {10}", partida.Tauler[0, 0], partida.Tauler[0, 1], partida.Tauler[0, 2], partida.Tauler[1, 0], partida.Tauler[1, 1], partida.Tauler[1, 2], partida.Tauler[2, 0], partida.Tauler[2, 1], partida.Tauler[2, 2], partida.JugadorGuanyador, partida.Torn));
+                        }
+                        else
+                        {
+                            msg = "Error,Partida no començada";
+                            Console.WriteLine(msg);
+                        }
+                        
                     }
                 }
                 

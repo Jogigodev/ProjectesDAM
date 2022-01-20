@@ -15,6 +15,7 @@ namespace _3enRalla
         private Jugador jugador2;
         private bool acabada;
         private char torn;
+       
 
         public Partida()
         {
@@ -23,6 +24,7 @@ namespace _3enRalla
             JugadorGuanyador = '-';
             Acabada = false;
             Torn = 'X';
+            
         }
         public char[,] Tauler { get => tauler; set => tauler = value; }
         public int NJugadors { get => nJugadors; set => nJugadors = value; }
@@ -31,11 +33,9 @@ namespace _3enRalla
         public Jugador Jugador2 { get => jugador2; set => jugador2 = value; }
         public char Torn { get => torn; set => torn = value; }
         public bool Acabada { get => acabada; set => acabada = value; }
+        
 
-        public string InfoPartida()
-        {
-            return String.Format("tauler: {0}; winner: {1}; turn: {2}",Tauler,JugadorGuanyador,Torn);
-        }
+        
         public void AfegirJugador()
         {
             
@@ -51,34 +51,46 @@ namespace _3enRalla
         public string Jugar(Jugador jugador,int fila,int columna)
         {
             string msg = "";
-            if (jugador.Nom == 'X') {
-                if (Tauler[fila, columna] =='-')
+            
+                if (jugador.Nom == 'X')
                 {
-                    Tauler[fila, columna] = 'X';
-                    Jugador1.Tirades++;
-                    msg = "ok";
-                    Torn = 'O';
-                }
-                else msg = "error";
+                    if (Tauler[fila, columna] == '-')
+                    {
+                        Tauler[fila, columna] = 'X';
+                        Jugador1.Tirades++;
+                        msg = "ok";
+                        Torn = 'O';
+                    }
+                    else msg = "error";
 
-            } 
-            else {
-                if (Tauler[fila, columna] == '-')
-                { 
-                    Tauler[fila, columna] = 'O'; 
-                    Jugador2.Tirades++;
-                    msg = "ok";
-                    Torn = 'X';
                 }
-                else msg = "error";
-            }
+                else
+                {
+                    if (Tauler[fila, columna] == '-')
+                    {
+                        Tauler[fila, columna] = 'O';
+                        Jugador2.Tirades++;
+                        msg = "ok";
+                        Torn = 'X';
+                    }
+                    else msg = "error";
+                }
             return msg;
         }
+            
+
+
+
+            
+       
         public void PartidaFinalitzada()
         {
             if (EsVictoria(this.Jugador1.Nom)) JugadorGuanyador=Jugador1.Nom;
             else if (EsVictoria(this.Jugador2.Nom)) JugadorGuanyador = Jugador2.Nom;
             else if(Jugador1.Tirades+Jugador2.Tirades==9) JugadorGuanyador = 'E';
+
+            Acabada = true;
+            
         }
 
         private bool EsVictoria(char jugador)
@@ -87,7 +99,7 @@ namespace _3enRalla
             if ((Tauler[0, 0] == jugador && Tauler[0, 1] == jugador && Tauler[0, 2] == jugador) || (Tauler[1, 0] == jugador && Tauler[1, 1] == jugador && Tauler[1, 2] == jugador)
                 || (Tauler[2, 0] == jugador && Tauler[2, 1] == jugador && Tauler[2, 2] == jugador) || (Tauler[0, 0] == jugador && Tauler[1, 1] == jugador && Tauler[2, 2] == jugador)
                 || (Tauler[0, 2] == jugador && Tauler[1, 1] == jugador && Tauler[2, 0] == jugador) || (Tauler[0, 0] == jugador && Tauler[1, 0] == jugador && Tauler[2, 0] == jugador)
-                || (Tauler[0, 1] == jugador && Tauler[1, 1] == jugador && Tauler[2, 1] == jugador) || (Tauler[0, 2] == jugador && Tauler[1, 2] == jugador && Tauler[2, 2] == jugador)) ;
+                || (Tauler[0, 1] == jugador && Tauler[1, 1] == jugador && Tauler[2, 1] == jugador) || (Tauler[0, 2] == jugador && Tauler[1, 2] == jugador && Tauler[2, 2] == jugador)) 
             {
                 victoria = true;
             }
