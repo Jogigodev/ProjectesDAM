@@ -10,6 +10,7 @@ namespace Trivial.Model
     public class Preguntes
     {
         public ObservableCollection<Pregunta> LlistaPreguntes { get; set; }
+        public ObservableCollection<Pregunta> PreguntesJoc { get; set; }
         public Preguntes()
         {
             LlistaPreguntes = new ObservableCollection<Pregunta>();

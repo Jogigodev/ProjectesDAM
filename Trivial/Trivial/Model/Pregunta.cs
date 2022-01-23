@@ -13,33 +13,32 @@ namespace Trivial.Model
         String id;
         String enunciat;
         ObservableCollection<String> respostes;
-        int dificultat;
+        Dificultat dificultat;
         String respostaCorrecta;
         Tema temaPregunta;
 
         public Pregunta()
         {
+            if (respostes == null)
+            {
+                respostes = new ObservableCollection<String>() { "", "", "", "" };
+            }
+            
+                
         }
 
-        public Pregunta(string id, string enunciat, ObservableCollection<String> respostes, string respostaCorrecta, Tema temaPregunta)
-        {
-            this.id = id;
-            this.enunciat = enunciat;
-            this.respostes = respostes;
-            this.respostaCorrecta = respostaCorrecta;
-            this.temaPregunta = temaPregunta;
-        }
+       
 
         public string Id { get => id; set =>SetProperty(ref id ,value); }
         public string Enunciat { get => enunciat; set => SetProperty(ref enunciat, value); }
         public ObservableCollection<String> Respostes { get => respostes; set => SetProperty(ref respostes, value); }
-        public int Dificultat { get => dificultat; set => SetProperty(ref dificultat, value); }
+        public Dificultat Dificultat { get => dificultat; set => SetProperty(ref dificultat, value); }
         public Tema Tema { get => temaPregunta; set => SetProperty(ref temaPregunta, value); }
         public string RespostaCorrecta { get => respostaCorrecta; set => SetProperty(ref respostaCorrecta, value); }
 
         public override string ToString()
         {
-            return this.Enunciat;
+            return enunciat;
         }
     }
 }

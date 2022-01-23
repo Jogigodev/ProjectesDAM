@@ -1,0 +1,66 @@
+﻿<Window x:Class="Trivial.View.PreguntaView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Trivial.View"
+        xmlns:vm="clr-namespace:Trivial.ViewModel"
+        xmlns:inf="clr-namespace:Trivial.Infrastructure"
+        mc:Ignorable="d"
+        Title="PreguntaView" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:PreguntesViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Id:" FontSize="12" Grid.Column="0" Grid.Row="0" Margin="20,20,20,5"/>
+        <TextBox Text="{Binding PreguntaActual.Id}" FontSize="12"   Grid.Column="0" Grid.Row="1" Margin="20,10,20,5"/>
+        <TextBlock Text="Enunciat:" FontSize="12" Grid.Column="0" Grid.Row="2"  Margin="20,20,20,5"/>
+        <TextBox Text="{Binding PreguntaActual.Enunciat}" FontSize="12"  Grid.Column="0" Grid.Row="3" Margin="20,10,20,5"/>
+
+        <TextBlock Text="Dificultat" FontSize="12" Grid.Row="5" Margin="20,20,5,5"/>
+        <ComboBox x:Name="cmbDificultat" Grid.Row="5" Grid.Column=" 0"  Margin="80,20,150,20" ItemsSource="{Binding PossiblesDificultats}" Text="{Binding PreguntaActual.Dificultat}"/>
+
+        <TextBlock Text="Resposta Correcte" FontSize="12" Grid.Column="1" Grid.Row="5" Margin="20,20,5,5"/>
+        <ComboBox x:Name="cmbResposta" Grid.Row="5" Grid.Column=" 1"  Margin="150,20,20,20" ItemsSource="{Binding PreguntaActual.Respostes}" SelectedItem="{Binding PreguntaActual.RespostaCorrecta}"  />
+        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" >
+            <TextBlock Text="Tema pregunta" Margin="20,10,0,5"/>
+            <ComboBox ItemsSource="{Binding PossiblesTemas}" Margin="20,10,0,5" Text="{Binding PreguntaActual.Tema}" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="6" Text="Respostes"  FontSize="15"/>
+        <ListView x:Name="listRespostes"  Margin="30" Grid.Row="6" Grid.Column="0"  SelectedItem="{Binding PreguntaActual.RespostaCorrecta}" >
+            <ListViewItem>
+                <TextBox Text="{Binding PreguntaActual.Respostes[0]}" FontSize="12" />
+            </ListViewItem>
+            <ListViewItem>
+                <TextBox Text="{Binding PreguntaActual.Respostes[1]}" FontSize="12" />
+            </ListViewItem>
+            <ListViewItem>
+                <TextBox Text="{Binding PreguntaActual.Respostes[2]}" FontSize="12" />
+            </ListViewItem>
+            <ListViewItem>
+                <TextBox Text="{Binding PreguntaActual.Respostes[3]}" FontSize="12" />
+            </ListViewItem>
+        </ListView>
+
+
+
+        <Button Content="Afegeix" Click="Button_Click" Command="{Binding AfegeixPreguntaCommand}"  Grid.Row="7"/>
+
+    </Grid>
+</Window>

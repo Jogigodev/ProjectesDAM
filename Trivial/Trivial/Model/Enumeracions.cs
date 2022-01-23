@@ -10,4 +10,8 @@ namespace Trivial.Model
     {
         Art,Ciència,Entreteniment,Esport,Geografia,Història
     }
+    public enum Dificultat
+    {
+        Fàcil,Intermig,Difícil
+    }
 }
