@@ -16,8 +16,10 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock  Text="{Binding Preguntes.PreguntesJoc[0].Enunciat}"   FontSize="30" Margin="20" Grid.Row="0"/>
+        <TextBlock  Text="{Binding Preguntes.PreguntesJoc[0].Enunciat}"   FontSize="20" Margin="20" Grid.Row="0"/>
         <ListView ItemsSource="{Binding Preguntes.PreguntesJoc[0].Respostes}" Grid.Row="1" SelectedItem="{Binding RespostaSeleccionada}" />
-        <Button x:Name="btnSeguent" Command="{Binding SeguentPreguntaCommand}" Margin="50"  Grid.Row="2" Content="Seguent Pregunta"/>
+        <Button x:Name="btnSeguent" Command="{Binding SeguentPreguntaCommand}" Margin="20,5,20,80"  Grid.Row="2" Content="Seguent Pregunta"/>
+        <Button x:Name="btnFinalitzar" Click="btnFinalitzar_Click" Command="{Binding JocFinalitzatCommand}" Margin="20,80,20,5"   Grid.Row="2" Content="Finalitzar"/>
+        
     </Grid>
 </Window>

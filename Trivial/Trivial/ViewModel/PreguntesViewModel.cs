@@ -19,6 +19,7 @@ namespace Trivial.ViewModel
         private string respostaSeleccionada;
         private int NEncerts;
         private int NErrors;
+        private int preguntesTotalsJoc;
         public PreguntesViewModel()
         {
             Preguntes = new Preguntes();
@@ -33,26 +34,43 @@ namespace Trivial.ViewModel
             CarregaCommand = new RelayCommand(ruta => Carrega(ruta.ToString()));
             DesaCommand = new RelayCommand(ruta => Desa(ruta.ToString()));
             SeguentPreguntaCommand= new RelayCommand(p => SeguentPregunta(), p => EsPotSeguentPregunta(p));
+            JocFinalitzatCommand= new RelayCommand(p => JocFinalitzat(), p => EsPotFinalitzar(p));
+        }
+
+        private bool EsPotFinalitzar(object p)
+        {
+            return Preguntes.PreguntesJoc.Count == 0;
+        }
+
+        private void JocFinalitzat()
+        {
+            MessageBox.Show($"Preguntes totals: {PreguntesTotalsJoc} Encerts {NEncerts} Errors {NErrors}");
+            NEncerts = 0;
+            NErrors = 0;
+            PreguntesTotalsJoc = 0;
         }
 
         private bool EsPotSeguentPregunta(object p)
         {
-            return true;
+            return Preguntes.PreguntesJoc.Count > 0;
         }
 
         private void SeguentPregunta()
         {
             
-            if (Preguntes.PreguntesJoc.Count!=0)
-            {
-                if (PreguntaActual.RespostaCorrecta == respostaSeleccionada) NEncerts++;
+           
+            
+                
+                if (Preguntes.PreguntesJoc[0].RespostaCorrecta == respostaSeleccionada) NEncerts++;
                 else NErrors++;
                 Preguntes.PreguntesJoc.RemoveAt(0);
-            }
-            else
-            {
-                MessageBox.Show($"Encerts {NEncerts} Errors {NErrors}");
-            }
+                
+            
+            
+            
+                
+                
+            
             
 
         }
@@ -104,6 +122,7 @@ namespace Trivial.ViewModel
         public RelayCommand CarregaCommand { get; private set;}
         public RelayCommand DesaCommand { get; private set; }
         public RelayCommand SeguentPreguntaCommand { get; private set; }
+        public RelayCommand JocFinalitzatCommand { get; private set; }
         public Array PossiblesTemas
         {
             get => Enum.GetValues(typeof(Tema));
@@ -112,7 +131,7 @@ namespace Trivial.ViewModel
         {
             get => Enum.GetValues(typeof(Dificultat));
         }
-        
+        public int PreguntesTotalsJoc { get => preguntesTotalsJoc; set => SetProperty(ref preguntesTotalsJoc, value); }
 
         private void Desa(string ruta)
         {
@@ -133,8 +152,9 @@ namespace Trivial.ViewModel
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        item.Respostes.RemoveAt(i);
+                        item.Respostes.Remove("");
                     }
+                    
                 }
             }
         }

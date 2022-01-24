@@ -31,21 +31,28 @@ namespace Trivial.View
 
         private void btnComença_Click(object sender, RoutedEventArgs e)
         {
+            int index = 0,indexLlista=0;
+
+            ((PreguntesViewModel)DataContext).PreguntesTotalsJoc = (int)sldNPreguntes.Value;
             if (cmbDificultat.SelectedItem != null)
             {
                 foreach (var item in stktemesSeleccionats.Children)
                 {
                     if (((CheckBox)item).IsChecked == true) temesEscollits.Add((Model.Tema)((CheckBox)item).Content);
                 }
-                foreach (Model.Pregunta pregunta in ((PreguntesViewModel)DataContext).Preguntes.LlistaPreguntes)
+                
+                while( index <sldNPreguntes.Value && indexLlista< ((PreguntesViewModel)DataContext).Preguntes.LlistaPreguntes.Count )
                 {
-                    if (pregunta.Dificultat == (Model.Dificultat)cmbDificultat.SelectedItem && temesEscollits.Contains(pregunta.Tema))
+                    if (((PreguntesViewModel)DataContext).Preguntes.LlistaPreguntes[indexLlista].Dificultat == (Model.Dificultat)cmbDificultat.SelectedItem && temesEscollits.Contains(((PreguntesViewModel)DataContext).Preguntes.LlistaPreguntes[indexLlista].Tema))
                     {
-                        ((PreguntesViewModel)DataContext).Preguntes.PreguntesJoc.Add(pregunta);
+                        ((PreguntesViewModel)DataContext).Preguntes.PreguntesJoc.Add(((PreguntesViewModel)DataContext).Preguntes.LlistaPreguntes[indexLlista]);
+                        index++;
+                        indexLlista++;
                     }
-
+                    indexLlista++;
                 }
-                if (((PreguntesViewModel)DataContext).Preguntes.PreguntesJoc.Count == 0) MessageBox.Show("No s'ha trobat cap pregunta amb els seguents criteris");
+                if (index < sldNPreguntes.Value) ((PreguntesViewModel)DataContext).PreguntesTotalsJoc = index;
+                if (((PreguntesViewModel)DataContext).Preguntes.PreguntesJoc.Count<=0) MessageBox.Show("No s'ha trobat cap pregunta amb els seguents criteris");
                 else
                 {
                     Window finestraJoc = new jocView();

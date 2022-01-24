@@ -24,7 +24,7 @@
 
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="500"/>
+                    <ColumnDefinition Width="750"/>
                     
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="horizontal" Grid.Row="1">
@@ -33,9 +33,9 @@
                     <TextBlock Text="{Binding Tema , StringFormat=Tema de la pregunta: {0}}" Margin="40,0,0,0"  FontSize="15" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2" >
-                    <TextBlock Text="{Binding Id}" FontSize="20"/>
+                    <TextBlock Text="{Binding Id}" FontSize="15" />
                     
-                    <TextBlock Text="{Binding Enunciat}" FontSize="20" />
+                    <TextBlock Text="{Binding Enunciat}" FontSize="15" Margin="10,0,0,0"/>
 
                 </StackPanel >
                 

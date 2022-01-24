@@ -19,11 +19,9 @@ namespace Trivial.Model
 
         public Pregunta()
         {
-            if (respostes == null)
-            {
-                respostes = new ObservableCollection<String>() { "", "", "", "" };
-            }
-            
+          
+             respostes = new ObservableCollection<String>() { "", "", "", "" };
+
                 
         }
 

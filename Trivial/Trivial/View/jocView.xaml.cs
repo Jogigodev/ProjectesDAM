@@ -26,5 +26,10 @@ namespace Trivial.View
             InitializeComponent();
             
         }
+
+        private void btnFinalitzar_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
