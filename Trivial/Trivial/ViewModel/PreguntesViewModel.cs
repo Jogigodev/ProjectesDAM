@@ -57,21 +57,9 @@ namespace Trivial.ViewModel
 
         private void SeguentPregunta()
         {
-            
-           
-            
-                
+
                 if (Preguntes.PreguntesJoc[0].RespostaCorrecta == respostaSeleccionada) NEncerts++;
                 else NErrors++;
-                Preguntes.PreguntesJoc.RemoveAt(0);
-                
-            
-            
-            
-                
-                
-            
-            
 
         }
 
@@ -114,7 +102,6 @@ namespace Trivial.ViewModel
 
         public Preguntes Preguntes { get => preguntes; set => SetProperty(ref preguntes, value); }
         public Pregunta PreguntaActual { get => preguntaActual; set => SetProperty(ref preguntaActual, value); }
-
         public string RespostaSeleccionada { get => respostaSeleccionada; set => SetProperty(ref respostaSeleccionada, value); }
         public RelayCommand AfegeixPreguntaCommand { get; private set; }
         public RelayCommand EditaPreguntaCommand { get; private set; }
