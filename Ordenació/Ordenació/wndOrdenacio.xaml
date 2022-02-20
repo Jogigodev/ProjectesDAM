@@ -20,8 +20,8 @@
         <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="False" >
             <TextBlock Text="Ordenació" FontSize="22"  VerticalAlignment="Center" Margin="10,0,0,0"/>
             <Button x:Name="btnGenera" Content="Genera" DockPanel.Dock="Right" Click="btnGenera_Click" Margin="10" Padding="5" />
-            <Button x:Name="btnOrdena" Content="Ordena" DockPanel.Dock="Right" Click="btnGenera_Click" Margin="10" Padding="5" />
-            <Button x:Name="btnPausa" Content="Pausa" DockPanel.Dock="Right" Click="btnGenera_Click" Margin="10" Padding="5" />
+            <Button x:Name="btnOrdena" Content="Ordena" DockPanel.Dock="Right" Click="btnOrdena_Click" Margin="10" Padding="5" />
+            <Button x:Name="btnReinciar" Content="Reiniciar" DockPanel.Dock="Right" Click="btnReinciar_Click" Margin="10" Padding="5" />
         </DockPanel>
         <Grid Grid.Column="0" Grid.Row="1" Margin="0,2,0,0">
             <Grid.ColumnDefinitions>
@@ -47,15 +47,15 @@
             <TextBlock Text="Nº d'elements" Grid.Column="0" Grid.Row="0" Margin="5,5,0,5"/>
             <Slider x:Name="sldNelem" Grid.Column="1" Maximum="20" Minimum="2"  Grid.Row="0" Margin="5" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
             <TextBlock Text="Gruix del marc" Grid.Column="0"  Grid.Row="1" Margin="5,5,0,5"/>
-            <Slider x:Name="sldGruix" Grid.Column="1" Maximum="20"  Grid.Row="1" Minimum="1"  Margin="5,5,5,5" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+            <Slider x:Name="sldGruix" Grid.Column="1" Maximum="50"  Grid.Row="1" Minimum="1"  Margin="5,5,5,5" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
             <TextBlock Text="Radi columnes" Grid.Column="0" Margin="5,5,0,5"  Grid.Row="2"/>
             <Slider x:Name="sldRadi" Grid.Column="1" Maximum="20"  Grid.Row="2" Minimum="1"  Margin="5,5,5,5" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
             <TextBlock Text="Temps pausa" Grid.Column="0"  Grid.Row="3" Margin="5,5,0,5"/>
-            <Slider x:Name="sldTemps" Grid.Column="1" Maximum="20"  Grid.Row="3" Minimum="0"  Margin="5,5,5,5" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+            <Slider x:Name="sldTemps" Grid.Column="1" Maximum="2000"  Value="100" Grid.Row="3" Minimum="100"  Margin="5,5,5,5" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
             <TextBlock Text="Marca intercanvis" Grid.Column="0"  Grid.Row="4" Margin="5,5,0,5"/>
             <CheckBox x:Name="cbIntercanvis" Grid.Column="1"  Grid.Row="4" Margin="5,5,5,5" HorizontalAlignment="Center"/>
             <TextBlock  Grid.Column="0" Margin="5,5,0,0"  Grid.Row="5" Text="Tipus de figures" FontSize=" 10" />
-            <ComboBox Grid.Column="0"  Grid.Row="6" Grid.ColumnSpan="2" Margin="5"  IsReadOnly="True"  >
+            <ComboBox x:Name="comTipus" Grid.Column="0" SelectedIndex="0" Grid.Row="6" Grid.ColumnSpan="2" Margin="5" SelectionChanged="ComboBox_SelectionChanged"  IsReadOnly="True"  >
                 <ComboBoxItem >
                     <TextBlock Text="Barres" />
                 </ComboBoxItem>
@@ -64,25 +64,42 @@
                 </ComboBoxItem>
             </ComboBox>
             <TextBlock  Grid.Column="0"  Grid.Row="7" Margin="5,5,0,5" Text="Tipus d'ordenació" FontSize=" 10" />
-            <ComboBox Grid.Column="0"  Grid.Row="8" Grid.ColumnSpan="2" Margin="5,5,5,5" >
+            <ComboBox Grid.Column="0" x:Name="comOrdenacio" SelectedIndex="0"  Grid.Row="8" Grid.ColumnSpan="2" Margin="5,5,5,5" >
                 <ComboBoxItem >
                     <TextBlock Text="Selecció directa" />
                 </ComboBoxItem>
                 <ComboBoxItem >
-                    <TextBlock Text="Punts" />
+                    <TextBlock Text="Ordenació cocktail" />
+                </ComboBoxItem>
+                <ComboBoxItem >
+                    <TextBlock Text="QuickSort" />
+                </ComboBoxItem>
+                <ComboBoxItem >
+                    <TextBlock Text="HeapSort" />
                 </ComboBoxItem>
             </ComboBox>
             <TextBlock Text="Disposició Inicial" Grid.Column="0"  Grid.Row="9" Margin="5,5,0,5"/>
-            <CheckBox x:Name="cbInvertit" Content="Invertit" Grid.Row="9" Margin="100,5,0,5" FontSize="8" Grid.ColumnSpan="2" />
-            <CheckBox x:Name="cbAleatori" Content="aleatori" Grid.Column="1" Grid.Row="9" Margin="50,5,0,5" FontSize="8" />
+            <CheckBox x:Name="cbInvertit" Content="Invertit" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked"  Grid.Row="9" Margin="100,5,0,5" FontSize="8" Grid.ColumnSpan="2" />
+            <CheckBox x:Name="cbAleatori" Content="aleatori" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" Grid.Column="1" Grid.Row="9" Margin="50,5,0,5" FontSize="8" />
             <TextBlock Text="Correcte" Grid.Column="0"  Grid.Row="10" Margin="5,5,0,5"/>
-            <xctk:ColorPicker x:Name="cpCorrecte" Grid.Row="10" Grid.Column="1" />
-            <TextBlock Text="Incorrecte" Grid.Column="0"  Grid.Row="11" Margin="5,5,0,5"/>
-            <xctk:ColorPicker x:Name="cpIncorrecte" Grid.Row="11" Grid.Column="1" />
+            <xctk:ColorPicker x:Name="cpCorrecte" Grid.Row="10" Grid.Column="1" SelectedColorChanged="cpCorrecte_SelectedColorChanged"/>
+            <TextBlock Text="Incorrecte" Grid.Column="0"  Grid.Row="11" Margin="5,5,0,5" />
+            <xctk:ColorPicker x:Name="cpIncorrecte" Grid.Row="11" Grid.Column="1" SelectedColorChanged="cpIncorrecte_SelectedColorChanged" />
             <TextBlock Text="Intercanvi" Grid.Column="0"  Grid.Row="12" Margin="5,5,0,5"/>
-            <xctk:ColorPicker x:Name="cpIntercanvi" Grid.Row="12" Grid.Column="1" />
+            <xctk:ColorPicker x:Name="cpIntercanvi" Grid.Row="12" Grid.Column="1" SelectedColorChanged="cpIntercanvi_SelectedColorChanged" />
+            <TextBlock Text="Fons" Grid.Column="0"  Grid.Row="13" Margin="5,5,0,5"/>
+            <xctk:ColorPicker x:Name="cpFons" Grid.Row="13" Grid.Column="1"  />
 
         </Grid>
-        <Canvas x:Name="cvsOrdenacio" Grid.Column="1" Grid.Row="1" />
+        <Viewbox Grid.Row="1" Grid.Column="1" Stretch="Fill"  >
+            <Canvas  x:Name="cvsOrdenacio" Height="1000" Width="1000">
+                <Canvas.Background>
+                    <SolidColorBrush Color="{Binding ElementName=cpFons, Path=SelectedColor}" />
+                </Canvas.Background>
+            </Canvas>
+        </Viewbox>
+        
+        
+        
     </Grid>
 </Window>
