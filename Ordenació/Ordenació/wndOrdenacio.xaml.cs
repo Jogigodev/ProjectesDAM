@@ -47,7 +47,8 @@ namespace Ordenacio
 
         private void btnGenera_Click(object sender, RoutedEventArgs e)
         {
-            PartidaComençada();
+           
+            ConfiguracioAcabada();
             if (comTipus.SelectedIndex == 0)//barres
             {
                 arrayRectangles=new Rectangle[(int)sldNelem.Value];
@@ -61,6 +62,8 @@ namespace Ordenacio
                     r.Fill = CanvisColors(i,vectorOrdenat[i]);
                     r.StrokeThickness = sldGruix.Value;
                     r.Stroke = Brushes.Black;
+                    r.RadiusX = 100;
+                    r.RadiusY = 100;
                     r.Height = vectorOrdenat[i] * r.Width;
                     Canvas.SetBottom(r,0);
                     Canvas.SetLeft(r, r.Width * i);
@@ -72,24 +75,28 @@ namespace Ordenacio
             }
             else //punts
             {
-                arrayEllipses= new Ellipse[(int)sldNelem.Value];
-                
+                arrayRectangles = new Rectangle[(int)sldNelem.Value];
+
                 GeneracioVector();
-                int j = 0;
+               
                 for (int i = 0; i < vectorOrdenat.Length; i++)
                 {
                     
-                    Ellipse el = new Ellipse();
+                    Rectangle el = new Rectangle();
                     el.Width = cvsOrdenacio.Width / vectorOrdenat.Length;
                     el.Fill = CanvisColors(i, vectorOrdenat[i]);
                     el.StrokeThickness = sldGruix.Value;
                     el.Stroke = Brushes.Black;
-                    el.Height = el.Width;
-                    Canvas.SetBottom(el,el.Height*j);
+                    el.RadiusX = 1000;
+                    el.RadiusY =1000;
+                    el.Height = vectorOrdenat[i] * el.Width;
+                    
+                    Canvas.SetTop(el, cvsOrdenacio.Height-(el.Width*vectorOrdenat[i]));
                     Canvas.SetLeft(el, el.Width * i);
-                    j++;
+                    
+                    
                     cvsOrdenacio.Children.Add(el);
-                    arrayEllipses[i] = el;
+                    arrayRectangles[i] = el;
                 }
 
             }
@@ -208,26 +215,26 @@ namespace Ordenacio
         }
         private  void SeleccioDirecta(int[] vector)
         {
-            int menor, posicion;
+            int menor;
 
             for (int i = 0; i < vector.Length-1; i++)
             {
-                menor = vector[i];
-                posicion = i;
+                
+                menor = i;
 
                 for (int j = i + 1; j < vector.Length; j++)
                 {
-                    if (vector[j] < menor)
+                    if (vector[j] < vector[menor])
                     {
-                        menor = vector[j];
-                        posicion = j;
+                       
+                        menor = j;
                     }
                     
                 }
 
-                if (posicion != i)
+                if (i != menor)
                 {
-                    Intercanvi( ref vector[i] , ref vector[posicion], i,  posicion);
+                    Intercanvi( ref vector[i] , ref vector[menor], i,  menor);
                    
                 }
             }
@@ -287,10 +294,10 @@ namespace Ordenacio
         void QuickSort(int[] taula)
         {
             
-            Particio(taula, 0, taula.Length - 1, 0);
+            Particio(taula, 0, taula.Length - 1);
             
         }
-        void  Particio(int[] numeros, int esq, int drt, int nComp)
+        void  Particio(int[] numeros, int esq, int drt)
         {
             int i, j, x;
             i = esq;
@@ -300,12 +307,11 @@ namespace Ordenacio
             {
                 while (numeros[i] < x)
                 {
-                    nComp++;
                     i++;
                 }
                 while (x < numeros[j])
                 {
-                    nComp++;
+                   
                     j--;
                 }
                 if (i <= j)
@@ -316,55 +322,60 @@ namespace Ordenacio
                 }
             } while (i <= j);
             if (esq < j)
-                Particio(numeros, esq, j, nComp);
+                Particio(numeros, esq, j );
             if (i < drt)
-                 Particio(numeros, i, drt, nComp);
+                 Particio(numeros, i, drt);
            
         }
-        void Ajustar(int[] numeros, int esq, int drt)
+
+        public void HeapSort(int[] arr)
         {
-            int i, j, x;
-            
-            i = esq;
-            j = 2 * esq;
-            x = numeros[esq];
-            if ((j < drt) && (numeros[j] < numeros[j + 1]))
+            int n = arr.Length;
+
+            // Build heap (rearrange array)
+            for (int i = n / 2 - 1; i >= 0; i--)
+                heapify(arr, n, i);
+
+            // One by one extract an element from heap
+            for (int i = n - 1; i > 0; i--)
             {
+                // Move current root to end
+                Intercanvi(ref arr[0], ref arr[i], 0, i);
                 
-                j++;
+
+                // call max heapify on the reduced heap
+                heapify(arr, i, 0);
             }
-            while ((j <= drt) && (x < numeros[j]))
-            {
-                numeros[i] = numeros[j];
-                i = j;
-                j = j * 2;
-                if ((j < drt) && (numeros[j] < numeros[j + 1]))
-                {
-                    
-                    j++;
-                }
-            }
-            numeros[i] = x;
-            
         }
-        void  HeapSort(int[] numeros)
+
+        // To heapify a subtree rooted with node i which is
+        // an index in arr[]. n is size of heap
+        void heapify(int[] arr, int n, int i)
         {
-            int esq, drt;
-            esq = ((numeros.Length - 1) / 2) + 1;
-            drt = numeros.Length - 1;
-            while (esq > 0)
+            int largest = i; // Initialize largest as root
+            int l = 2 * i + 1; // left = 2*i + 1
+            int r = 2 * i + 2; // right = 2*i + 2
+
+            // If left child is larger than root
+            if (l < n && arr[l] > arr[largest])
+                largest = l;
+
+            // If right child is larger than largest so far
+            if (r < n && arr[r] > arr[largest])
+                largest = r;
+
+            // If largest is not root
+            if (largest != i)
             {
-                esq--;
-                 Ajustar(numeros, esq, drt);
+                int swap = arr[i];
+                arr[i] = arr[largest];
+                arr[largest] = swap;
+
+                // Recursively heapify the affected sub-tree
+                heapify(arr, n, largest);
             }
-            while (drt > 0)
-            {
-                Intercanvi(  ref numeros[0], ref numeros[drt],0,drt);
-                drt--;
-                 Ajustar(numeros, 0, drt);
-            }
-            
         }
+
         #endregion
 
         #region Canvis interficie
@@ -397,16 +408,18 @@ namespace Ordenacio
             if (comTipus.SelectedIndex == 1) sldRadi.IsEnabled = false;
             else sldRadi.IsEnabled = true;
         }
-        private void PartidaComençada()
+        private void ConfiguracioAcabada()
         {
+            btnOrdena.IsEnabled = true;
             sldNelem.IsEnabled = false;
             sldRadi.IsEnabled = false;            
             comTipus.IsEnabled = false;
             comOrdenacio.IsEnabled = false;
             cbAleatori.IsEnabled = false;
             cbInvertit.IsEnabled = false;
+            btnGenera.IsEnabled = false;
         }
-        private void PartidaAcabada()
+        private void SenseConfiguracio()
         {
             sldNelem.IsEnabled = true;
             sldRadi.IsEnabled =true;
@@ -414,6 +427,8 @@ namespace Ordenacio
             comOrdenacio.IsEnabled = true;
             cbAleatori.IsEnabled = true;
             cbInvertit.IsEnabled = true;
+            btnGenera.IsEnabled = true;
+            btnOrdena.IsEnabled = false;
         }
 
         #endregion
@@ -443,7 +458,7 @@ namespace Ordenacio
 
         private void btnReinciar_Click(object sender, RoutedEventArgs e)
         {
-            PartidaAcabada();
+            SenseConfiguracio();
             cvsOrdenacio.Children.Clear();
             vectorOrdenat = null;
             
