@@ -22,6 +22,7 @@
             <Button x:Name="btnGenera" Content="Genera" DockPanel.Dock="Right"  Click="btnGenera_Click" Margin="10" Padding="5" />
             <Button x:Name="btnOrdena" Content="Ordena" DockPanel.Dock="Right" Click="btnOrdena_Click" Margin="10" Padding="5" />
             <Button x:Name="btnReinciar" Content="Reiniciar" DockPanel.Dock="Right" Click="btnReinciar_Click" Margin="10" Padding="5" />
+            <Button x:Name="btnAtura" Content="Atura" DockPanel.Dock="Right" Click="btnAtura_Click" Margin="10" Padding="5" />
         </DockPanel>
         <Grid Grid.Column="0" Grid.Row="1" Margin="0,2,0,0">
             <Grid.ColumnDefinitions>

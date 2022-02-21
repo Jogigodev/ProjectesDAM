@@ -24,11 +24,11 @@ namespace Ordenacio
     {
         
         int[] vectorOrdenat;
-        Ellipse[] arrayEllipses;
         Rectangle[] arrayRectangles;
         Random random = new Random();
         List<int> llistaNumeros;
         SolidColorBrush colorCorrecte,colorIncorecte,colorCanvi;
+        bool aturat = false;
         
         
         public wndOrdenacio()
@@ -43,91 +43,120 @@ namespace Ordenacio
             cpIntercanvi.SelectedColor = Colors.Yellow;
         }
 
-
+        #region Botons Interficie
 
         private void btnGenera_Click(object sender, RoutedEventArgs e)
         {
-           
+
             ConfiguracioAcabada();
-            if (comTipus.SelectedIndex == 0)//barres
+
+            arrayRectangles = new Rectangle[(int)sldNelem.Value];
+
+            GeneracioVector();
+            for (int i = 0; i < vectorOrdenat.Length; i++)
             {
-                arrayRectangles=new Rectangle[(int)sldNelem.Value];
-                 
-                GeneracioVector();
-                for (int i = 0; i < vectorOrdenat.Length; i++)
+
+                Rectangle r = new Rectangle();
+                r.Width = cvsOrdenacio.Width / vectorOrdenat.Length;
+                if (i + 1 == vectorOrdenat[i]) r.Fill = colorCorrecte;
+                else r.Fill = colorIncorecte;
+                r.StrokeThickness = sldGruix.Value;
+                r.Stroke = Brushes.Black;
+                if (comTipus.SelectedIndex == 0)
                 {
-                    
-                    Rectangle r = new Rectangle();
-                    r.Width = cvsOrdenacio.Width / vectorOrdenat.Length;
-                    r.Fill = CanvisColors(i,vectorOrdenat[i]);
-                    r.StrokeThickness = sldGruix.Value;
-                    r.Stroke = Brushes.Black;
-                    r.RadiusX = 100;
-                    r.RadiusY = 100;
+                    r.RadiusX = sldRadi.Value;
+                    r.RadiusY = sldRadi.Value;
                     r.Height = vectorOrdenat[i] * r.Width;
-                    Canvas.SetBottom(r,0);
+                    Canvas.SetBottom(r, 0);
                     Canvas.SetLeft(r, r.Width * i);
-                    
-                    cvsOrdenacio.Children.Add(r);
-                    arrayRectangles[i] = r;
                 }
-              
-            }
-            else //punts
-            {
-                arrayRectangles = new Rectangle[(int)sldNelem.Value];
-
-                GeneracioVector();
-               
-                for (int i = 0; i < vectorOrdenat.Length; i++)
+                else
                 {
-                    
-                    Rectangle el = new Rectangle();
-                    el.Width = cvsOrdenacio.Width / vectorOrdenat.Length;
-                    el.Fill = CanvisColors(i, vectorOrdenat[i]);
-                    el.StrokeThickness = sldGruix.Value;
-                    el.Stroke = Brushes.Black;
-                    el.RadiusX = 1000;
-                    el.RadiusY =1000;
-                    el.Height = vectorOrdenat[i] * el.Width;
-                    
-                    Canvas.SetTop(el, cvsOrdenacio.Height-(el.Width*vectorOrdenat[i]));
-                    Canvas.SetLeft(el, el.Width * i);
-                    
-                    
-                    cvsOrdenacio.Children.Add(el);
-                    arrayRectangles[i] = el;
+                    r.RadiusX = 1000;
+                    r.RadiusY = 1000;
+                    r.Height = r.Width;
+                    Canvas.SetLeft(r, r.Width * i);
+                    Canvas.SetTop(r, cvsOrdenacio.Height - (vectorOrdenat[i] * r.Width));
                 }
 
+
+                cvsOrdenacio.Children.Add(r);
+                arrayRectangles[i] = r;
             }
+        }
+        private void btnOrdena_Click(object sender, RoutedEventArgs e)
+        {
+            if (comOrdenacio.SelectedIndex == 0)
+            {
+                SeleccioDirecta(vectorOrdenat);
+            }
+            else if (comOrdenacio.SelectedIndex == 1)
+            {
+                cocktailSort(vectorOrdenat);
+            }
+            else if (comOrdenacio.SelectedIndex == 2)
+            {
+                QuickSort(vectorOrdenat);
+            }
+            else if (comOrdenacio.SelectedIndex == 3)
+            {
+                HeapSort(vectorOrdenat);
+            }
+        }
+        private void btnAtura_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void btnReinciar_Click(object sender, RoutedEventArgs e)
+        {
+            SenseConfiguracio();
+            cbAleatori.IsChecked = false;
+            cbInvertit.IsChecked = false;
+            cvsOrdenacio.Children.Clear();
+            vectorOrdenat = null;
+
+
+        }
+        private void cpCorrecte_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            colorCorrecte.Color = (Color)e.NewValue;
 
         }
 
+        private void cpIncorrecte_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            colorIncorecte.Color = (Color)e.NewValue;
+        }
+
+        private void cpIntercanvi_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            colorCanvi.Color = (Color)e.NewValue;
+        }
+        #endregion
+
+        #region Mètodes d'ordenació i creació 
         private void GeneracioVector()
         {
             if (cbAleatori.IsChecked == false && cbInvertit.IsChecked == false)
             {
-                
+
                 vectorOrdenat = CreadorVectorOrdenat((int)sldNelem.Value);
 
             }
             else if (cbAleatori.IsChecked == true)
             {
-                llistaNumeros=new List<int>((int)sldNelem.Value);
-               
+                llistaNumeros = new List<int>((int)sldNelem.Value);
+
                 vectorOrdenat = CreadorVectorOrdenatAleatoriament((int)sldNelem.Value, llistaNumeros, random);
             }
             else if (cbInvertit.IsChecked == true)
             {
-               
+
                 vectorOrdenat = CreadorVectorOrdenatInversament((int)sldNelem.Value);
             }
         }
 
-
-
-
-        #region Mètodes d'ordenació i creació 
         public static int[] CreadorVectorOrdenat(int mida)
         {
             int[] vector = new int[mida];
@@ -172,9 +201,8 @@ namespace Ordenacio
             a = b;
             b =(int) temp;
             
-            if (comTipus.SelectedIndex == 0)
-            {
-                temp = arrayRectangles[i].Height;
+           
+                
                 if (cbIntercanvis.IsChecked == true)
                 {
                     arrayRectangles[i].Fill = colorCanvi;
@@ -182,34 +210,30 @@ namespace Ordenacio
                     Espera(sldTemps.Value);
                     DoEvents();
                 }
-
-                arrayRectangles[i].Height = cvsOrdenacio.Height / (int)sldNelem.Value * a;
-                arrayRectangles[j].Height = cvsOrdenacio.Height / (int)sldNelem.Value * b;
-
-                arrayRectangles[i].Fill = CanvisColors(i, a);
-                arrayRectangles[j].Fill = CanvisColors(j, b);
-                Espera(sldTemps.Value);
-                DoEvents();
+            if (comTipus.SelectedIndex == 0)
+            {
+                temp = arrayRectangles[i].Height;
+                arrayRectangles[i].Height = arrayRectangles[j].Height;
+                arrayRectangles[j].Height = temp;
             }
             else
             {
-                temp = arrayEllipses[i].Height;
-                if (cbIntercanvis.IsChecked == true)
-                {
-                    arrayEllipses[i].Fill = colorCanvi;
-                    arrayEllipses[j].Fill = colorCanvi;
-                    Espera(sldTemps.Value);
-                    DoEvents();
-                }
+                temp = Canvas.GetTop(arrayRectangles[i]);
+                Canvas.SetTop(arrayRectangles[i], Canvas.GetTop(arrayRectangles[j]));
+                Canvas.SetTop(arrayRectangles[j], temp);
+            }
 
-                arrayEllipses[i].Height = cvsOrdenacio.Height / (int)sldNelem.Value * a;
-                arrayEllipses[j].Height = cvsOrdenacio.Height / (int)sldNelem.Value * b;
 
-                arrayEllipses[i].Fill = CanvisColors(i, a);
-                arrayEllipses[j].Fill = CanvisColors(j, b);
+            if (i + 1 == a) arrayRectangles[i].Fill = colorCorrecte;
+            else arrayRectangles[i].Fill = colorIncorecte;
+            if (j + 1 == b) arrayRectangles[j].Fill = colorCorrecte;
+            else arrayRectangles[j].Fill = colorIncorecte;
+
+
+            
                 Espera(sldTemps.Value);
                 DoEvents();
-            }
+      
            
 
         }
@@ -332,46 +356,44 @@ namespace Ordenacio
         {
             int n = arr.Length;
 
-            // Build heap (rearrange array)
+            
             for (int i = n / 2 - 1; i >= 0; i--)
                 heapify(arr, n, i);
 
-            // One by one extract an element from heap
+            
             for (int i = n - 1; i > 0; i--)
             {
-                // Move current root to end
+                
                 Intercanvi(ref arr[0], ref arr[i], 0, i);
                 
 
-                // call max heapify on the reduced heap
+                
                 heapify(arr, i, 0);
             }
         }
 
-        // To heapify a subtree rooted with node i which is
-        // an index in arr[]. n is size of heap
+       
         void heapify(int[] arr, int n, int i)
         {
-            int largest = i; // Initialize largest as root
-            int l = 2 * i + 1; // left = 2*i + 1
-            int r = 2 * i + 2; // right = 2*i + 2
+            int largest = i; 
+            int l = 2 * i + 1; 
+            int r = 2 * i + 2; 
 
-            // If left child is larger than root
+            
             if (l < n && arr[l] > arr[largest])
                 largest = l;
 
-            // If right child is larger than largest so far
+           
             if (r < n && arr[r] > arr[largest])
                 largest = r;
 
-            // If largest is not root
+            
             if (largest != i)
             {
-                int swap = arr[i];
-                arr[i] = arr[largest];
-                arr[largest] = swap;
+                
+                Intercanvi(ref arr[i], ref arr[largest], i, largest);
 
-                // Recursively heapify the affected sub-tree
+                
                 heapify(arr, n, largest);
             }
         }
@@ -430,45 +452,10 @@ namespace Ordenacio
             btnGenera.IsEnabled = true;
             btnOrdena.IsEnabled = false;
         }
+        
 
         #endregion
 
-        private void btnOrdena_Click(object sender, RoutedEventArgs e)
-        {
-            if (comOrdenacio.SelectedIndex == 0)
-            {
-                SeleccioDirecta(vectorOrdenat);
-            }
-            else if (comOrdenacio.SelectedIndex == 1)
-            {
-                cocktailSort(vectorOrdenat);
-            }
-            else if (comOrdenacio.SelectedIndex == 2)
-            {
-                QuickSort(vectorOrdenat);
-            }
-            else if (comOrdenacio.SelectedIndex == 3)
-            {
-                HeapSort(vectorOrdenat);
-            }
-
-
-
-        }
-
-        private void btnReinciar_Click(object sender, RoutedEventArgs e)
-        {
-            SenseConfiguracio();
-            cvsOrdenacio.Children.Clear();
-            vectorOrdenat = null;
-            
-
-        }
-
-        private SolidColorBrush CanvisColors(int index,int valor)
-        {
-            return index + 1 == valor ? colorCorrecte : colorIncorecte;
-        }
         #region Threads
         Thread thread;
         private void Espera(double milliseconds)
@@ -483,22 +470,6 @@ namespace Ordenacio
             Dispatcher.PushFrame(frame);
         }
         static Action action;
-
-        private void cpCorrecte_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            colorCorrecte.Color = (Color)e.NewValue;
-           
-        }
-
-        private void cpIncorrecte_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            colorIncorecte.Color = (Color)e.NewValue;
-        }
-
-        private void cpIntercanvi_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            colorCanvi.Color = (Color)e.NewValue;
-        }
 
         public static void DoEvents()
         {
